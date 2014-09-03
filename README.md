@@ -1,0 +1,3 @@
+This program is meant solely to make people's lives just a little bit easier. By providing functions for basic row operations, it will make modifying matrices easier. If you would rather save space by not printing the results of each modification, set the "verbose" property to "false". Hopefully this will provide a useful alternative to LaTeX while working with matrices.
+
+Let's put this in the public domain, use it however you like!
