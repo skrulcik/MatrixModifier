@@ -30,7 +30,9 @@ class Matrix:
 
     def rowAddOther(self, row, other, co):
         row -= self.baseOne
+        other -= self.baseOne
         assert 0 <= row and row <len(self.model)
+        assert 0 <= other and other < len(self.model)
         self.model[row] = self.model[row]+self.model[other]*co
         print(self.model) if self.verbose else None
         
