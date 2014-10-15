@@ -40,8 +40,8 @@ def howto():
             To swap two rows:
             --> swap <row_a> and <row_b>
             """
-def get_col_values(row):
-    col_values = input("Enter row % of your matrix:",r).split()
+def get_col_values(row, num_cols):
+    col_values = input("Enter row % of your matrix:\n"%row).split()
     if len(col_values) != num_cols:
         return get_col_values(row)
     else:
@@ -59,7 +59,7 @@ def create_sequence():
         return None
     new_matrix = Matrix(num_rows, num_cols)
     for r in range(1,num_rows+1):
-        col_values = get_col_values(r)
+        col_values = get_col_values(r, num_cols)
         for c in range(num_cols):
             new_matrix.model[r-1][c] = col_values[c]
     return new_matrix
@@ -72,7 +72,7 @@ def main():
     current = []
     while not should_exit:
         if len(current) == 0:
-            current = create_sequence()
+            current.append(create_sequence())
         else:
             request = input()
             print "Whoops! We haven't implemented that command yet"
