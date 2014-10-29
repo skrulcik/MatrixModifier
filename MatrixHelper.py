@@ -2,12 +2,9 @@
 
 from Matrix import *
 
-def welcome():
-    return """ Welcome to Matrix Helper
-              Type 'help' to get started."""
-
-def howto():
-    return """
+# TODO:add help text for other commands
+help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instructions \n",
+	    "std_help": """
             How to Use Matrix Helper
             
             Instead of simple solving systems of equations,
@@ -39,13 +36,37 @@ def howto():
 
             To swap two rows:
             --> swap <row_a> and <row_b>
-            """
+            """}
+matrices = [] #Global for now, objects in future
+
+def howto(mode):
+    # Generic method for printing help text for various commands
+    if mode not in help_texts:
+	mode = "std_help"
+    print help_texts[mode]
+def std_help():
+    howto("std_help")
+def welcome():
+    howto("welcome")
+
+# Helper for create method
 def get_col_values(row, num_cols):
-    col_values = input("Enter row % of your matrix:\n"%row).split()
+    col_values = raw_input("Enter row %r of your matrix:\n"%row)
+    col_values = col_values.replace(","," ") #Prefer space delimiter, but accept comma
+    col_values = col_values.strip().split() #Remove whitespace and seperate values
     if len(col_values) != num_cols:
-        return get_col_values(row)
-    else:
-        return col_values
+	# User error: did not enter columns correctly
+	print("Please enter the correct number of values.")
+        return get_col_values(row, num_cols)
+    for i in xrange(len(col_values)):
+	# Ensure we are working with numbers
+	if(col_values[i].isalpha()):
+	    print("Illegal character, please re-enter.")
+	    print("Variable implementation available in future.")
+	    return get_col_values(row, num_cols)
+	# If number, safe to convert to float
+        col_values[i] = float(col_values[i])
+    return col_values
 
 
 def create_sequence():
@@ -62,20 +83,30 @@ def create_sequence():
         col_values = get_col_values(r, num_cols)
         for c in range(num_cols):
             new_matrix.model[r-1][c] = col_values[c]
-    return new_matrix
-            
-    
+    matrices.append(new_matrix)
 
 def main():
-    print(welcome())
+    commands = {"welcome":welcome,
+		    "create":create_sequence,
+		    "help":std_help}
     should_exit = False
-    current = []
+    welcome()
     while not should_exit:
-        if len(current) == 0:
-            current.append(create_sequence())
-        else:
-            request = input()
+	#Main application loop
+        request = raw_input("Enter a command:")
+	request = request.strip().lower() #Commands are not case sensitive
+	if request == "":
+	    # No input is interpreted as not knowing what to do
+	    request = "help"
+	if request in commands:
+	    # Standard command list
+	    commands[request]()
+	elif request == "quit":
+	    # User wants to quit
+	    should_exit = True
+	else:
             print "Whoops! We haven't implemented that command yet"
+    print "Thanks for using Matrix Helper!"
             
         
     
