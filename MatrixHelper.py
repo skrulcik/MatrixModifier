@@ -29,7 +29,7 @@ help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instr
             
 
             To mutiply a row by a constant:
-            -->scale row <row_number> by <constant>
+            -->scale row <row_number> <constant>
 
             To add a row to another:
             --> add <row_number> <optional coefficient> to <row_to_be_modified>
@@ -83,21 +83,29 @@ def create_sequence():
         col_values = get_col_values(r, num_cols)
         for c in range(num_cols):
             new_matrix.model[r-1][c] = col_values[c]
+    new_matrix.display()
     matrices.append(new_matrix)
 
-def row_swap(data):
+def row_swap(data, matrix):
     pass
 
-def row_add(data):
+def row_add(data, matrix):
     pass
 
-def row_scale(data):
-    pass
+def row_scale(data, matrix):
+    tokens = data.split()
+    if(len(tokens) != 4):
+        print("Please use format scale row '<row_number> <constant>'")
+    else:
+        row = float(tokens[2])
+        factor = float(tokens[3])
+        matrix.rowScale(row, factor)
+
 
 def main():
     commands = {"welcome":welcome,
-		    "create":create_sequence,
-		    "help":std_help}
+                    "create":create_sequence,
+                    "help":std_help}
     modifiers = {"swap":row_swap,
                     "add":row_add,
                     "scale":row_scale}
@@ -115,7 +123,7 @@ def main():
     	    # Standard command list
     	    commands[request]()
         elif request in modifiers:
-            modifiers[request](raw_data)
+            modifiers[request](raw_data, matrices[0])
         elif request == "quit":
     	    # User wants to quit
     	    should_exit = True
