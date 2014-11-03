@@ -87,15 +87,35 @@ def create_sequence():
     matrices.append(new_matrix)
 
 def row_swap(data, matrix):
-    pass
+    tokens = data.split()
+    if(len(tokens) == 4):
+        #Work with coefficient
+        rowa = float(tokens[1])
+        rowb = float(tokens[3])
+        matrix.swap(origin_row, rowa, rowb)
+    else:
+        print("Please use format 'swap <row_a> and <row_b>'")
 
 def row_add(data, matrix):
-    pass
+    tokens = data.split()
+    if(len(tokens) == 5):
+        #Work with coefficient
+        origin_row = float(tokens[4])
+        add_row = float(tokens[1])
+        add_coefficient = float(tokens[2])
+        matrix.rowAddOther(origin_row, add_row, add_coefficient)
+    elif (len(tokens) == 4):
+        #Without coefficient
+        origin_row = float(tokens[3])
+        add_row = float(tokens[1])
+        matrix.rowAddOther(origin_row, add_row, 1)
+    else:
+        print("Please use format 'add <row_number> <optional coefficient> to <row_to_be_modified>'")
 
 def row_scale(data, matrix):
     tokens = data.split()
     if(len(tokens) != 4):
-        print("Please use format scale row '<row_number> <constant>'")
+        print("Please use format 'scale row <row_number> <constant>'")
     else:
         row = float(tokens[2])
         factor = float(tokens[3])
@@ -103,8 +123,8 @@ def row_scale(data, matrix):
 
 
 def main():
-    commands = {"welcome":welcome,
-                    "create":create_sequence,
+    commands = {"create":create_sequence,
+                    "welcome":welcome,
                     "help":std_help}
     modifiers = {"swap":row_swap,
                     "add":row_add,
