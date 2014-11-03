@@ -3,7 +3,7 @@
 from Matrix import *
 
 # TODO:add help text for other commands
-help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instructions \n",
+help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instructions, 'quit' to exit program \n",
 	    "std_help": """
             How to Use Matrix Helper
             
@@ -85,26 +85,41 @@ def create_sequence():
             new_matrix.model[r-1][c] = col_values[c]
     matrices.append(new_matrix)
 
+def row_swap(data):
+    pass
+
+def row_add(data):
+    pass
+
+def row_scale(data):
+    pass
+
 def main():
     commands = {"welcome":welcome,
 		    "create":create_sequence,
 		    "help":std_help}
+    modifiers = {"swap":row_swap,
+                    "add":row_add,
+                    "scale":row_scale}
     should_exit = False
     welcome()
     while not should_exit:
-	#Main application loop
-        request = raw_input("Enter a command:")
-	request = request.strip().lower() #Commands are not case sensitive
-	if request == "":
-	    # No input is interpreted as not knowing what to do
-	    request = "help"
-	if request in commands:
-	    # Standard command list
-	    commands[request]()
-	elif request == "quit":
-	    # User wants to quit
-	    should_exit = True
-	else:
+        #Main application loop
+        raw_data = raw_input("Enter a command:")
+        raw_data = raw_data.strip().lower() #Commands are not case sensitive
+        request = raw_data.split()[0]
+        if request == "":
+    	    # No input is interpreted as not knowing what to do
+    	    request = "help"
+        if request in commands:
+    	    # Standard command list
+    	    commands[request]()
+        elif request in modifiers:
+            modifiers[request](raw_data)
+        elif request == "quit":
+    	    # User wants to quit
+    	    should_exit = True
+        else:
             print "Whoops! We haven't implemented that command yet"
     print "Thanks for using Matrix Helper!"
             
