@@ -48,13 +48,16 @@ class Matrix:
         assert r>=0 and r < len(self.model)
         assert c>=0 and c < len(self.model[r])
         return self.model[r][c]
+    
     def set(self,r,c,val):
         r -= self.baseOne
         c -= self.baseOne
         assert r>=0 and r < len(self.model)
         assert c>=0 and c < len(self.model[r])
         self.model[r][c] = val
-        
+
+    def display(self):
+        print(self.model)
 
 def CreateMatrix(mtrx, verbose=True):
     A = Matrix(len(mtrx), len(mtrx[0]), verbose)
