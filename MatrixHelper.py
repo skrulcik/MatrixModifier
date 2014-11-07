@@ -72,7 +72,7 @@ def get_col_values(row, num_cols):
 	    print("Variable implementation available in future.")
 	    return get_col_values(row, num_cols)
 	# If number, safe to convert to float
-        col_values[i] = float(col_values[i])
+        col_values[i] = float(eval(col_values[i]))
     return col_values
 
 
@@ -112,7 +112,7 @@ def row_add(data, matrix):
         #Work with coefficient
         origin_row = float(tokens[4])
         add_row = float(tokens[1])
-        add_coefficient = float(tokens[2])
+        add_coefficient = float(eval(tokens[2]))
         matrix.rowAddOther(origin_row, add_row, add_coefficient)
     elif (len(tokens) == 4):
         #Without coefficient
@@ -128,7 +128,7 @@ def row_scale(data, matrix):
         print("Please use format 'scale <row_number> by <constant>'")
     else:
         row = float(tokens[1])
-        factor = float(tokens[3])
+        factor = float(eval(tokens[3]))
         matrix.rowScale(row, factor)
 
 
