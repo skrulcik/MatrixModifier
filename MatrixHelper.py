@@ -1,6 +1,12 @@
 #/bin/python
-
+import string
 from Matrix import *
+
+alpha_index = 0 #Used in generating names for new matrices
+def defaultName(length=1):
+    chars = string.ascii_uppercase
+    name = ''.join()
+    return random.choice(chars)
 
 # TODO:add help text for other commands
 help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instructions, 'quit' to exit program \n",
@@ -29,7 +35,7 @@ help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instr
             
 
             To mutiply a row by a constant:
-            -->scale row <row_number> <constant>
+            --> scale <row_number> by <constant>
 
             To add a row to another:
             --> add <row_number> <optional coefficient> to <row_to_be_modified>
@@ -38,15 +44,16 @@ help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instr
             --> swap <row_a> and <row_b>
             """}
 matrices = [] #Global for now, objects in future
+current = -1
 
 def howto(mode):
     # Generic method for printing help text for various commands
     if mode not in help_texts:
 	mode = "std_help"
     print help_texts[mode]
-def std_help():
+def std_help(raw_data):
     howto("std_help")
-def welcome():
+def welcome(raw_data):
     howto("welcome")
 
 # Helper for create method
@@ -69,7 +76,8 @@ def get_col_values(row, num_cols):
     return col_values
 
 
-def create_sequence():
+def create_sequence(raw_data):
+    global current
     num_rows = int(input("How many rows in your matrix?"))
     if(num_rows <= 0):
         print "Invalid input: must have at least 1 row in your matrix"
@@ -85,14 +93,16 @@ def create_sequence():
             new_matrix.model[r-1][c] = col_values[c]
     new_matrix.display()
     matrices.append(new_matrix)
+    current = len(matrices)-1
+    print "current", current
 
 def row_swap(data, matrix):
     tokens = data.split()
     if(len(tokens) == 4):
         #Work with coefficient
-        rowa = float(tokens[1])
-        rowb = float(tokens[3])
-        matrix.swap(origin_row, rowa, rowb)
+        rowa = int(tokens[1])
+        rowb = int(tokens[3])
+        matrix.swap(rowa, rowb)
     else:
         print("Please use format 'swap <row_a> and <row_b>'")
 
@@ -115,9 +125,9 @@ def row_add(data, matrix):
 def row_scale(data, matrix):
     tokens = data.split()
     if(len(tokens) != 4):
-        print("Please use format 'scale row <row_number> <constant>'")
+        print("Please use format 'scale <row_number> by <constant>'")
     else:
-        row = float(tokens[2])
+        row = float(tokens[1])
         factor = float(tokens[3])
         matrix.rowScale(row, factor)
 
@@ -130,7 +140,7 @@ def main():
                     "add":row_add,
                     "scale":row_scale}
     should_exit = False
-    welcome()
+    welcome("")
     while not should_exit:
         #Main application loop
         raw_data = raw_input("Enter a command:")
@@ -141,9 +151,12 @@ def main():
     	    request = "help"
         if request in commands:
     	    # Standard command list
-    	    commands[request]()
+    	    commands[request](raw_data)
         elif request in modifiers:
-            modifiers[request](raw_data, matrices[0])
+            if current >= 0:
+                modifiers[request](raw_data, matrices[current])
+            else:
+                print("Please create a Matrix first.")
         elif request == "quit":
     	    # User wants to quit
     	    should_exit = True
