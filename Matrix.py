@@ -59,9 +59,21 @@ class Matrix:
     def display(self):
         print(self.model)
 
+    def get_transpose(self):
+        """Transpose of Matrix"""
+        a = self.model
+        aT = array([a[:, col] for col in range(len(a[0]))])
+        AT = Matrix(len(aT), len(aT[0]), self.verbose)
+        AT.model = aT
+        return AT
+    def __str__(self):
+        return self.model.__str__()
+    T = property(get_transpose)
+        
+
 def CreateMatrix(mtrx, verbose=True):
     A = Matrix(len(mtrx), len(mtrx[0]), verbose)
-    A.model = mtrx
+    A.model = array(mtrx)
     return A
 
 def randMatrix(row, col, verbose=True, floor=-99, ceiling=99):
