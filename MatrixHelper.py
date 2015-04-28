@@ -42,6 +42,21 @@ help_texts = {"welcome":"\n\n Welcome to Matrix Helper \n Enter 'help' for instr
 
             To swap two rows:
             --> swap <row_a> and <row_b>
+
+            To raise current matrix to a power:
+            --> power <exp>
+
+            To output TeX:
+            --> tex
+
+            To print current matrices:
+            --> print state
+
+            To Select the current matrix:
+            --> select <matrix id>
+
+            To multiply the current matrix by another:
+            --> multiply by <other matrix id>
             """}
 matrices = [] #Global for now, objects in future
 current = -1
@@ -105,6 +120,35 @@ def row_swap(data, matrix):
         matrix.swap(rowa, rowb)
     else:
         print("Please use format 'swap <row_a> and <row_b>'")
+def tex_it(raw_data):
+    global current
+    global matrices
+    if current >= 0 and current < len(matrices):
+        print(matrices[current].to_latex())
+    else:
+        print("There are no matrices yet")
+
+def print_info(raw_data):
+    # print matrix state by default
+    global matrices
+    global current
+    print("\n\nBegin Print State:")
+    for c in range(len(matrices)):
+        if c == current:
+            h,w = matrices[current].size()
+            print("\n\nCurrent Matrix (%d) :" % c)
+            buff = ""
+            for _ in range(4*w+5): buff += "-"
+            print(buff)
+            matrices[c].display()
+            print(buff)
+        else:
+            print("\n\nMatrix (%d):" % c)
+            matrices[c].display()
+    print("End Print State\n\n")
+                
+            
+
 
 def row_add(data, matrix):
     tokens = data.split()
@@ -130,15 +174,51 @@ def row_scale(data, matrix):
         row = float(tokens[1])
         factor = float(eval(tokens[3]))
         matrix.rowScale(row, factor)
+ 
+def raise_power(data, matrix):
+    tokens = data.split()
+    if len(tokens) != 2:
+            print("Please use format 'power <exp>'")
+    else:
+        exp = int(tokens[1])
+        matrix.to_power(exp)
+def select_new(data, matrix):
+    tokens = data.split()
+    global current
+    global matrices
+    if len(tokens) != 2:
+        print("Please use format 'select <matrix id>'")
+    else:
+        current = int(tokens[1])
+        print("Current matrix:")
+        matrices[current].display()
+        
+def matrix_mult(data, matrix):
+    tokens = data.split()
+    global current
+    global matrices
+    if len(tokens) != 3:
+        print("Please use format 'multiply by <other_id>'")
+    else:
+        other_idx = int(tokens[2])
+        # NOTE this creates a new matrix, not modifying the original
+        C = matrices[current].multiply(matrices[other_idx])
+        matrices.append(C)
+        current = len(matrices) - 1
 
 
 def main():
     commands = {"create":create_sequence,
                     "welcome":welcome,
-                    "help":std_help}
+                    "help":std_help,
+                    "tex":tex_it,
+                    "print":print_info}
     modifiers = {"swap":row_swap,
                     "add":row_add,
-                    "scale":row_scale}
+                    "scale":row_scale,
+                    "power":raise_power,
+                    "select":select_new,
+                    "multiply":matrix_mult}
     should_exit = False
     welcome("")
     while not should_exit:

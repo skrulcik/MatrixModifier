@@ -3,6 +3,8 @@
 from numpy import *
 
 
+set_printoptions(precision=2) #Numpy array printing, should make variable
+
 class Matrix:
     def __init__(self, rows=0, cols=0, verbose=True, baseOne=True):
         """ Instantiates Matrix of size rows x cols
@@ -66,6 +68,35 @@ class Matrix:
         AT = Matrix(len(aT), len(aT[0]), self.verbose)
         AT.model = aT
         return AT
+
+    def multiply(self, other):
+        #TODO: add exception handlers
+        C = Matrix()
+        C.model = self.model.dot(other.model)
+        print(C) if self.verbose else None
+        return C
+
+
+    def to_power(self, exp):
+        self.model = linalg.matrix_power(self.model, exp)
+        print(self.model) if self.verbose else None
+
+    def size(self):
+        return self.model.shape
+
+    def to_latex(self):
+        s = "\\left[\\begin{matrix}"
+        h,w = self.model.shape
+        for r in range(h):
+            for c in range(w):
+                s += repr(round(self.model[r][c],2))
+                if c == w-1:
+                    s+= "\\\\" #new line
+                else:
+                    s+= "&" #alignment character
+        s += "\\end{matrix}\\right]"
+        return s
+
     def __str__(self):
         return self.model.__str__()
     T = property(get_transpose)
